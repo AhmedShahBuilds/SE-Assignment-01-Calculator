@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check if index.html exists
+      run: |
+        if [ ! -f index.html ]; then
+          echo "Error: index.html not found!"
+          exit 1
+        fi
+        echo "index.html found - Check passed"
+
+    - name: List all files
+      run: ls -la
+
+    - name: Simple Build Check
+      run: echo "Build and basic checks completed successfully!"
