@@ -1,0 +1,133 @@
+:root{
+  --bg1:#1b1f24;
+  --bg2:#20262d;
+  --key:#2a3138;
+  --key-hi:#343d46;
+  --op:#c98a3f;
+  --op-hi:#dba05a;
+  --text:#eef1f4;
+  --muted:#8b96a1;
+  --danger:#b9563f;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  height:100%;
+  margin:0;
+}
+
+body{
+  background:radial-gradient(circle at 30% 0%, var(--bg2), var(--bg1) 70%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Segoe UI', Helvetica, Arial, sans-serif;
+  color:var(--text);
+}
+
+.calc{
+  width:320px;
+  max-width:92vw;
+  background:#171b1f;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+.brand{
+  font-size:12px;
+  letter-spacing:0.08em;
+  color:var(--muted);
+  margin:0 4px 14px;
+}
+
+.display{
+  background:#0f1114;
+  border-radius:14px;
+  padding:22px 18px 16px;
+  margin-bottom:16px;
+  text-align:right;
+  overflow:hidden;
+}
+
+.history{
+  min-height:18px;
+  font-size:14px;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow-x:auto;
+}
+
+.current{
+  font-size:40px;
+  font-weight:600;
+  line-height:1.2;
+  word-break:break-all;
+}
+
+.pad{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+button{
+  border:none;
+  border-radius:12px;
+  background:var(--key);
+  color:var(--text);
+  font-size:18px;
+  padding:16px 0;
+  cursor:pointer;
+  transition:background 0.12s ease, transform 0.05s ease;
+}
+
+button:active{
+  transform:scale(0.96);
+}
+
+button:hover{
+  background:var(--key-hi);
+}
+
+.op{
+  background:transparent;
+  color:var(--op);
+  border:1px solid var(--op);
+}
+
+.op:hover{
+  background:var(--op);
+  color:#171b1f;
+}
+
+.equals{
+  background:var(--op);
+  color:#171b1f;
+  font-weight:700;
+}
+
+.equals:hover{
+  background:var(--op-hi);
+}
+
+.clear{
+  color:var(--danger);
+}
+
+.span2{
+  grid-column:span 2;
+}
+
+@media (prefers-color-scheme: light){
+  :root{
+    --bg1:#e7e9ec;
+    --bg2:#f5f6f8;
+  }
+}

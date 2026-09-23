@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="calc">
+    <p class="brand">CALCULATOR</p>
+    <div class="display">
+      <div class="history" id="history">&nbsp;</div>
+      <div class="current" id="current">0</div>
+    </div>
+    <div class="pad">
+      <button class="clear" onclick="clearAll()">AC</button>
+      <button onclick="toggleSign()">±</button>
+      <button onclick="percent()">%</button>
+      <button class="op" onclick="chooseOp('÷')">÷</button>
+
+      <button onclick="inputDigit('7')">7</button>
+      <button onclick="inputDigit('8')">8</button>
+      <button onclick="inputDigit('9')">9</button>
+      <button class="op" onclick="chooseOp('×')">×</button>
+
+      <button onclick="inputDigit('4')">4</button>
+      <button onclick="inputDigit('5')">5</button>
+      <button onclick="inputDigit('6')">6</button>
+      <button class="op" onclick="chooseOp('−')">−</button>
+
+      <button onclick="inputDigit('1')">1</button>
+      <button onclick="inputDigit('2')">2</button>
+      <button onclick="inputDigit('3')">3</button>
+      <button class="op" onclick="chooseOp('+')">+</button>
+
+      <button class="span2" onclick="inputDigit('0')">0</button>
+      <button onclick="inputDot()">.</button>
+      <button class="equals" onclick="equals()">=</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
