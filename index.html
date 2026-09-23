@@ -1,3 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculator</title>
+<style>
+  :root{
+    --bg1:#1a1033;
+    --bg2:#241547;
+    --key:#2e1f52;
+    --key-hi:#3c2a6b;
+    --op:#3fd8c9;
+    --op-hi:#6ae8db;
+    --text:#f1eefc;
+    --muted:#9b8fc4;
+    --danger:#ff6b81;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    height:100%;
+    margin:0;
+  }
+  body{
+    background:radial-gradient(circle at 30% 0%, var(--bg2), var(--bg1) 70%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Segoe UI', Helvetica, Arial, sans-serif;
+    color:var(--text);
+  }
+  .calc{
+    width:320px;
+    max-width:92vw;
+    background:#150c2b;
+    border-radius:22px;
+    padding:22px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  .brand{
+    font-size:12px;
+    letter-spacing:0.08em;
+    color:var(--muted);
+    margin:0 4px 14px;
+  }
+  .display{
+    background:#0d0720;
+    border-radius:14px;
+    padding:22px 18px 16px;
+    margin-bottom:16px;
+    text-align:right;
+    overflow:hidden;
+  }
+  .history{
+    min-height:18px;
+    font-size:14px;
+    color:var(--muted);
+    white-space:nowrap;
+    overflow-x:auto;
+  }
+  .current{
+    font-size:40px;
+    font-weight:600;
+    line-height:1.2;
+    word-break:break-all;
+    color:var(--text);
+  }
+  .pad{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+  }
+  button{
+    border:none;
+    border-radius:12px;
+    background:var(--key);
+    color:var(--text);
+    font-size:18px;
+    padding:16px 0;
+    cursor:pointer;
+    transition:background 0.12s ease, transform 0.05s ease;
+  }
+  button:active{
+    transform:scale(0.96);
+  }
+  button:hover{
+    background:var(--key-hi);
+  }
+  .op{
+    background:transparent;
+    color:var(--op);
+    border:1px solid var(--op);
+  }
+  .op:hover{
+    background:var(--op);
+    color:#150c2b;
+  }
+  .equals{
+    background:var(--op);
+    color:#150c2b;
+    font-weight:700;
+  }
+  .equals:hover{
+    background:var(--op-hi);
+  }
+  .clear{
+    color:var(--danger);
+  }
+  .span2{
+    grid-column:span 2;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg1:#e9e4f7;
+      --bg2:#f6f3fd;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg1:#1a1033;
+    --bg2:#241547;
+  }
+</style>
+</head>
+<body>
+  <div class="calc">
+    <p class="brand">CALCULATOR</p>
+    <div class="display">
+      <div class="history" id="history">&nbsp;</div>
+      <div class="current" id="current">0</div>
+    </div>
+    <div class="pad">
       <button class="clear" onclick="clearAll()">AC</button>
       <button onclick="toggleSign()">±</button>
       <button onclick="percent()">%</button>
@@ -21,3 +155,109 @@
       <button class="span2" onclick="inputDigit('0')">0</button>
       <button onclick="inputDot()">.</button>
       <button class="equals" onclick="equals()">=</button>
+    </div>
+  </div>
+
+<script>
+  let current = '0';
+  let previous = null;
+  let operator = null;
+  let overwrite = true;
+
+  const currentEl = document.getElementById('current');
+  const historyEl = document.getElementById('history');
+
+  function render(){
+    currentEl.textContent = current;
+    historyEl.textContent = previous !== null ? `${previous} ${operator}` : '\u00A0';
+  }
+
+  function inputDigit(d){
+    if (overwrite){
+      current = d === '0' ? '0' : d;
+      overwrite = false;
+    } else {
+      current = current === '0' ? d : current + d;
+    }
+    render();
+  }
+
+  function inputDot(){
+    if (overwrite){
+      current = '0.';
+      overwrite = false;
+      render();
+      return;
+    }
+    if (!current.includes('.')) current += '.';
+    render();
+  }
+
+  function toggleSign(){
+    if (current === '0') return;
+    current = current.startsWith('-') ? current.slice(1) : '-' + current;
+    render();
+  }
+
+  function percent(){
+    current = String(parseFloat(current) / 100);
+    render();
+  }
+
+  function clearAll(){
+    current = '0';
+    previous = null;
+    operator = null;
+    overwrite = true;
+    render();
+  }
+
+  function compute(a, b, op){
+    a = parseFloat(a); b = parseFloat(b);
+    switch(op){
+      case '+': return a + b;
+      case '−': return a - b;
+      case '×': return a * b;
+      case '÷': return b === 0 ? 'Error' : a / b;
+    }
+  }
+
+  function chooseOp(op){
+    if (operator && !overwrite){
+      equals();
+    }
+    previous = current;
+    operator = op;
+    overwrite = true;
+    render();
+  }
+
+  function equals(){
+    if (operator === null || previous === null) return;
+    const result = compute(previous, current, operator);
+    current = String(result);
+    previous = null;
+    operator = null;
+    overwrite = true;
+    render();
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key >= '0' && e.key <= '9') inputDigit(e.key);
+    else if (e.key === '.') inputDot();
+    else if (e.key === '+') chooseOp('+');
+    else if (e.key === '-') chooseOp('−');
+    else if (e.key === '*') chooseOp('×');
+    else if (e.key === '/') { e.preventDefault(); chooseOp('÷'); }
+    else if (e.key === 'Enter' || e.key === '=') equals();
+    else if (e.key === 'Escape') clearAll();
+    else if (e.key === 'Backspace'){
+      current = current.length > 1 ? current.slice(0, -1) : '0';
+      render();
+    }
+  });
+
+  render();
+</script>
+</body>
+</html>
